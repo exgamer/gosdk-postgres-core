@@ -39,7 +39,7 @@ func InitPostgresGormConnection(dbConfig *config.PostgresDbConfig) (*gorm.DB, er
 
 	c.Dialector = postgres.Open(getPostgresConnectionString(c))
 
-	dbClient, err := GetGormConnection(c)
+	dbClient, err := database.GetGormConnection(c)
 
 	if err != nil {
 		return nil, err
