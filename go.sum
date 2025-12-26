@@ -57,8 +57,8 @@ github.com/envoyproxy/go-control-plane v0.9.9-0.20201210154907-fd9021fe5dad/go.m
 github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7+kN2VEUnK/pcBlmesArF7c=
 github.com/exgamer/gosdk-core v0.0.20-dev h1:G++tvWlTcEf6evl4amA65o6llX5nWFXn4j8Z5/Y7FZc=
 github.com/exgamer/gosdk-core v0.0.20-dev/go.mod h1:dE85IJlX+YLi99CoOkuuzrNGD71fNr//at4pyBkuiPQ=
-github.com/exgamer/gosdk-db-core v0.0.1-dev h1:51qmfDW0XleyvdFEisR7BT0AeiECMjMrJuiuz1gEz64=
-github.com/exgamer/gosdk-db-core v0.0.1-dev/go.mod h1:hkIJ1Fdx+26tTZxURaz1sNQHoArZ4p9atdFanvyZPNE=
+github.com/exgamer/gosdk-db-core v0.0.2-dev h1:Bn3rhL4n7r08RlU1AT31RmOIU70n2F8Yt3PDYd6n5T8=
+github.com/exgamer/gosdk-db-core v0.0.2-dev/go.mod h1:hkIJ1Fdx+26tTZxURaz1sNQHoArZ4p9atdFanvyZPNE=
 github.com/frankban/quicktest v1.14.4 h1:g2rn0vABPOOXmZUj+vbmUp0lPoXEMuhTpIluN0XL9UY=
 github.com/frankban/quicktest v1.14.4/go.mod h1:4ptaffx2x8+WTWXmUCuVU6aPUX1/Mz7zb5vbUoiM6w0=
 github.com/fsnotify/fsnotify v1.6.0 h1:n+5WquG0fcWoWp6xPWfHdbskMCQaFnG6PfBrh1Ky4HY=
