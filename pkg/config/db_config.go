@@ -10,5 +10,6 @@ type PostgresDbConfig struct {
 	MaxOpenConnections int     `mapstructure:"POSTGRES_DB_MAX_OPEN_CONNECTIONS"`
 	MaxIdleConnections int     `mapstructure:"POSTGRES_DB_MAX_IDLE_CONNECTIONS"`
 	Logging            bool    `mapstructure:"POSTGRES_DB_LOGGING"`
+	DbLogLevel         string  `mapstructure:"POSTGRES_DB_LOG_LEVEL"`
 	Threshold          float64 `mapstructure:"POSTGRES_DB_THRESHOLD"`
 }

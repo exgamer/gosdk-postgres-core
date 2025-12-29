@@ -32,6 +32,7 @@ func InitPostgresGormConnection(dbConfig *config.PostgresDbConfig) (*gorm.DB, er
 		Port:               dbConfig.Port,
 		SslMode:            false,
 		Logging:            dbConfig.Logging,
+		DbLogLevel:         dbConfig.DbLogLevel,
 		MaxOpenConnections: dbConfig.MaxOpenConnections,
 		MaxIdleConnections: dbConfig.MaxIdleConnections,
 		Threshold:          dbConfig.Threshold,
