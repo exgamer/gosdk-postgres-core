@@ -2,7 +2,8 @@
 
 `gosdk-postgres-core` — пакет для удобной и безопасной работы с PostgreSQL через **GORM** в рамках  `gosdk-db-core` `gosdk-core` приложения.
 
-TODO ссылку на read me `gosdk-db-core`
+- [Документация GOSDK-CORE](https://github.com/exgamer/gosdk-core)
+- [Документация GOSDK-DB-CORE](https://github.com/exgamer/gosdk-db-core)
 
 ## Возможности
 
