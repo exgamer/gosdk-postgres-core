@@ -3,8 +3,8 @@ module github.com/exgamer/gosdk-postgres-core
 go 1.23.0
 
 require (
-	github.com/exgamer/gosdk-core v1.0.2
-	github.com/exgamer/gosdk-db-core v1.0.2
+	github.com/exgamer/gosdk-core v1.0.4
+	github.com/exgamer/gosdk-db-core v1.0.3
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.25.10
 )
