@@ -1,15 +1,15 @@
-package app
+package di
 
 import (
-	"github.com/exgamer/gosdk-core/pkg/app"
 	"github.com/exgamer/gosdk-core/pkg/di"
+	app2 "github.com/exgamer/gosdk-postgres-core/pkg/app"
 	"github.com/exgamer/gosdk-postgres-core/pkg/config"
 	"gorm.io/gorm"
 )
 
 // GetDefaultPostgresConnection возвращает основной connection postgres.
-func GetDefaultPostgresConnection(a *app.App) (*gorm.DB, error) {
-	r, err := di.Resolve[*PostgresGormRegistry](a.Container)
+func GetDefaultPostgresConnection(c *di.Container) (*gorm.DB, error) {
+	r, err := di.Resolve[*app2.PostgresGormRegistry](c)
 
 	if err != nil {
 		return nil, err
@@ -24,8 +24,8 @@ func GetDefaultPostgresConnection(a *app.App) (*gorm.DB, error) {
 }
 
 // AddPostgresConnection добавить соединение с БД
-func AddPostgresConnection(a *app.App, name string, config *config.PostgresDbConfig) error {
-	r, err := di.Resolve[*PostgresGormRegistry](a.Container)
+func AddPostgresConnection(c *di.Container, name string, config *config.PostgresDbConfig) error {
+	r, err := di.Resolve[*app2.PostgresGormRegistry](c)
 
 	if err != nil {
 		return err
@@ -37,8 +37,8 @@ func AddPostgresConnection(a *app.App, name string, config *config.PostgresDbCon
 }
 
 // GetPostgresConnection возвращает connection postgres.
-func GetPostgresConnection(a *app.App, name string) (*gorm.DB, error) {
-	r, err := di.Resolve[*PostgresGormRegistry](a.Container)
+func GetPostgresConnection(c *di.Container, name string) (*gorm.DB, error) {
+	r, err := di.Resolve[*app2.PostgresGormRegistry](c)
 
 	if err != nil {
 		return nil, err

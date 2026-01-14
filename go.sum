@@ -3,8 +3,10 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/exgamer/gosdk-core v1.0.11 h1:iGHSoOGmZ+MPnbHWd/D+UgQKj+fNiVBnb0QgGQfDGr0=
 github.com/exgamer/gosdk-core v1.0.11/go.mod h1:wxCueHkEFc8CmjHBPPitGOx0pOIzS+KnTgTjH5gnYw4=
+github.com/exgamer/gosdk-core v1.0.12/go.mod h1:wxCueHkEFc8CmjHBPPitGOx0pOIzS+KnTgTjH5gnYw4=
 github.com/exgamer/gosdk-db-core v1.0.8 h1:w8jmogjWPmHNaI1r4QFVs0ITNTIMKnAv5IGD8bRCDUk=
 github.com/exgamer/gosdk-db-core v1.0.8/go.mod h1:Pi9TjwmHBaEvfAxoTWW2qkJ1MGqBBcNl56nXSRQ9TDQ=
+github.com/exgamer/gosdk-db-core v1.0.9/go.mod h1:vxeEvUeINpZSP4zMH5LKKU24iIKU1Y9VL7aX8vcyLxQ=
 github.com/frankban/quicktest v1.14.6 h1:7Xjx+VpznH+oBnejlPUj8oUpdxnVs4f8XU8WnHkI4W8=
 github.com/frankban/quicktest v1.14.6/go.mod h1:4ptaffx2x8+WTWXmUCuVU6aPUX1/Mz7zb5vbUoiM6w0=
 github.com/fsnotify/fsnotify v1.9.0 h1:2Ml+OJNzbYCTzsxtv8vKSFD9PbJjmhYF14k/jKC7S9k=

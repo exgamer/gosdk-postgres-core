@@ -5,6 +5,10 @@
 - [Документация GOSDK-CORE](https://github.com/exgamer/gosdk-core)
 - [Документация GOSDK-DB-CORE](https://github.com/exgamer/gosdk-db-core)
 
+
+- 🧩 **Dependency Injection**
+    - [Что доступно в DI из коробки](pkg/di/DI_FUNCTIONS_README.MD)
+
 ## Возможности
 
 - Registry подключений `PostgresGormRegistry`
