@@ -3,17 +3,17 @@
 Основной коннект postgres:
 
 ```go
-postgresConncetion, err := app.GetDefaultPostgresConnection(c *di.Container) (*gorm.DB, error)
+postgresConncetion, err := di.GetDefaultPostgresConnection(c *di.Container) (*gorm.DB, error)
 ```
 
 Добавить свой коннет к постгресу:
 
 ```go
-err := app.AddPostgresConnection(c *di.Containerp, name string, config *config.PostgresDbConfig) error
+err := di.AddPostgresConnection(c *di.Containerp, name string, config *config.PostgresDbConfig) error
 ```
 
 Получить свой коннет к постгресу:
 
 ```go
-postgresConncetion, err := := GetPostgresConnection(c *di.Container, name string) (*gorm.DB, error) 
+postgresConncetion, err := := di.GetPostgresConnection(c *di.Container, name string) (*gorm.DB, error) 
 ```
