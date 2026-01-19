@@ -3,15 +3,15 @@ module github.com/exgamer/gosdk-postgres-core
 go 1.25.5
 
 require (
-	github.com/exgamer/gosdk-core v1.0.13
-	github.com/exgamer/gosdk-db-core v1.0.10
+	github.com/exgamer/gosdk-core v1.0.15
+	github.com/exgamer/gosdk-db-core v1.0.11
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.31.1
 )
 
 require (
 	github.com/fsnotify/fsnotify v1.9.0 // indirect
-	github.com/getsentry/sentry-go v0.40.0 // indirect
+	github.com/getsentry/sentry-go v0.41.0 // indirect
 	github.com/go-errors/errors v1.5.1 // indirect
 	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
