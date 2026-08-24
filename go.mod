@@ -4,7 +4,7 @@ go 1.25.5
 
 require (
 	github.com/exgamer/gosdk-core v1.0.23
-	github.com/exgamer/gosdk-db-core v1.0.16
+	github.com/exgamer/gosdk-db-core v1.0.17
 	gorm.io/driver/postgres v1.6.2
 	gorm.io/gorm v1.31.2
 )
@@ -13,6 +13,7 @@ require (
 	github.com/fsnotify/fsnotify v1.10.1 // indirect
 	github.com/getsentry/sentry-go v0.48.0 // indirect
 	github.com/go-errors/errors v1.5.1 // indirect
+	github.com/go-gormigrate/gormigrate/v2 v2.1.6 // indirect
 	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
@@ -32,3 +33,5 @@ require (
 	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/text v0.41.0 // indirect
 )
+
+replace github.com/exgamer/gosdk-db-core => ../go-sdk-db-core

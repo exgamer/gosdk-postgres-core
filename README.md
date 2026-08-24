@@ -8,6 +8,8 @@
 
 - 🧩 **Dependency Injection**
     - [Что доступно в DI из коробки](pkg/di/DI_FUNCTIONS_README.MD)
+- 🧱 **Миграции**
+    - [Как подключить и использовать](MIGRATIONS.md)
 
 ## Возможности
 
@@ -16,6 +18,7 @@
 - Singleflight при конкурентном доступе
 - Корректное закрытие всех подключений
 - Kernel для жизненного цикла приложения
+- Миграции схемы при старте (`PostgresKernel.WithMigrations`, см. [MIGRATIONS.md](MIGRATIONS.md))
 - Helper-функции для бизнес-кода
 
 ## Логирование запросов
