@@ -18,7 +18,7 @@
 - Singleflight при конкурентном доступе
 - Корректное закрытие всех подключений
 - Kernel для жизненного цикла приложения
-- Миграции схемы при старте (`PostgresKernel.WithMigrations`, см. [MIGRATIONS.md](MIGRATIONS.md))
+- Миграции схемы (`Migrator`, ручной накат/откат через консоль проекта, см. [MIGRATIONS.md](MIGRATIONS.md))
 - Helper-функции для бизнес-кода
 
 ## Логирование запросов
