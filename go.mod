@@ -3,15 +3,15 @@ module github.com/exgamer/gosdk-postgres-core
 go 1.26.0
 
 require (
-	github.com/exgamer/gosdk-core v1.0.26
-	github.com/exgamer/gosdk-db-core v1.0.19
+	github.com/exgamer/gosdk-core v1.0.27
+	github.com/exgamer/gosdk-db-core v1.0.20
 	gorm.io/driver/postgres v1.6.3
 	gorm.io/gorm v1.31.2
 )
 
 require (
 	github.com/fsnotify/fsnotify v1.10.1 // indirect
-	github.com/getsentry/sentry-go v0.49.0 // indirect
+	github.com/getsentry/sentry-go v0.50.0 // indirect
 	github.com/go-errors/errors v1.5.1 // indirect
 	github.com/go-gormigrate/gormigrate/v2 v2.1.7 // indirect
 	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
@@ -29,7 +29,7 @@ require (
 	github.com/spf13/viper v1.21.0 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
-	golang.org/x/sync v0.23.0 // indirect
-	golang.org/x/sys v0.48.0 // indirect
-	golang.org/x/text v0.42.0 // indirect
+	golang.org/x/sync v0.24.0 // indirect
+	golang.org/x/sys v0.49.0 // indirect
+	golang.org/x/text v0.43.0 // indirect
 )
