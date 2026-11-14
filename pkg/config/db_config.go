@@ -12,4 +12,6 @@ type PostgresDbConfig struct {
 	Logging            bool    `mapstructure:"POSTGRES_DB_LOGGING" json:"POSTGRES_DB_LOGGING"`
 	DbLogLevel         string  `mapstructure:"POSTGRES_DB_LOG_LEVEL" json:"POSTGRES_DB_LOG_LEVEL"`
 	Threshold          float64 `mapstructure:"POSTGRES_DB_THRESHOLD" json:"POSTGRES_DB_THRESHOLD"`
+	// SslMode Режим TLS libpq: disable, allow, prefer, require, verify-ca, verify-full; пусто — disable (как раньше)
+	SslMode string `mapstructure:"POSTGRES_DB_SSLMODE" json:"POSTGRES_DB_SSLMODE"`
 }

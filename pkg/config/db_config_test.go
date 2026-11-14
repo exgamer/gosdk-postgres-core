@@ -20,6 +20,7 @@ var postgresEnvKeys = []string{
 	"POSTGRES_DB_LOGGING",
 	"POSTGRES_DB_LOG_LEVEL",
 	"POSTGRES_DB_THRESHOLD",
+	"POSTGRES_DB_SSLMODE",
 }
 
 func TestInitConfig_OSEnvWithoutEnvFile(t *testing.T) {
