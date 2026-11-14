@@ -4,7 +4,7 @@ go 1.27.3
 
 require (
 	github.com/exgamer/gosdk-core v1.2.0
-	github.com/exgamer/gosdk-db-core v1.3.0
+	github.com/exgamer/gosdk-db-core v1.3.1
 	github.com/jackc/pgx/v5 v5.11.0
 	gorm.io/driver/postgres v1.6.3
 	gorm.io/gorm v1.31.2
