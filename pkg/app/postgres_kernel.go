@@ -49,6 +49,8 @@ func newPostgresRegistry() (*PostgresGormRegistry, error) {
 		return nil, err
 	}
 
+	database.WarnSslMode(dbConfig) // при старте, а не при первом запросе к БД
+
 	reg := NewPostgresGormRegistry(database.InitPostgresGormConnection)
 	reg.AddDefaultConnection(dbConfig)
 

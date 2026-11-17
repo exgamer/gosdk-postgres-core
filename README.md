@@ -29,6 +29,13 @@
 TLS - `POSTGRES_DB_SSLMODE`: `disable` (по умолчанию, как раньше), `allow`, `prefer`, `require`, `verify-ca`,
 `verify-full`; другое значение - ошибка подключения. Значения DSN (пароль с пробелом, кавычкой, `\`) экранируются.
 
+При `disable`, `allow`, `prefer` (и пустом `POSTGRES_DB_SSLMODE`) и `APP_ENV` не `local` (пустой и неизвестный - тоже
+не `local`) один раз пишется WARN (при старте `PostgresKernel` или первом подключении): соединение может быть без
+шифрования. Подключение - как раньше; вне local задать `require`, `verify-ca` или `verify-full`.
+
+Пароль не выводится: `fmt` (`%v`, `%+v`, `%#v`) и `json.Marshal` конфига показывают `POSTGRES_DB_PASSWORD` как `***`
+(пустой - пустым).
+
 ## Логирование запросов
 
 Для вывода логов запросов используется ENV POSTGRES_DB_LOG_LEVEL, если не указан логи выключены
