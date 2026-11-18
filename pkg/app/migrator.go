@@ -1,7 +1,9 @@
 package app
 
 import (
+	"errors"
 	"fmt"
+	"time"
 
 	"github.com/exgamer/gosdk-db-core/pkg/migration"
 	"gorm.io/gorm"
@@ -10,8 +12,8 @@ import (
 // migrationLockID — идентификатор Postgres advisory lock, которым Migrator
 // оборачивает накат/откат миграций. Защищает от гонки при параллельном
 // вызове (например, если кто-то запустил накат и откат одновременно из
-// разных мест) — держит лок тот, кто выполняет операцию, остальные ждут на
-// этом же SELECT. Postgres-специфично — поэтому живёт здесь, а не в
+// разных мест) — держит лок тот, кто выполняет операцию, остальные ждут его
+// до migrationLockWait. Postgres-специфично — поэтому живёт здесь, а не в
 // dialect-agnostic gosdk-db-core/pkg/migration.
 const migrationLockID = 72261 // произвольное, но стабильное число
 
@@ -41,8 +43,8 @@ func (m *Migrator) Up() error {
 		return nil
 	}
 
-	err := withMigrationLock(m.db, func() error {
-		return migration.Run(m.db, m.migrations)
+	err := withMigrationLock(m.db, func(conn *gorm.DB) error {
+		return migration.Run(conn, m.migrations)
 	})
 	if err != nil {
 		return fmt.Errorf("run migrations: %w", err)
@@ -57,8 +59,8 @@ func (m *Migrator) RollbackLast() error {
 		return nil
 	}
 
-	err := withMigrationLock(m.db, func() error {
-		return migration.RollbackLast(m.db, m.migrations)
+	err := withMigrationLock(m.db, func(conn *gorm.DB) error {
+		return migration.RollbackLast(conn, m.migrations)
 	})
 	if err != nil {
 		return fmt.Errorf("rollback last migration: %w", err)
@@ -74,8 +76,8 @@ func (m *Migrator) RollbackTo(migrationID string) error {
 		return nil
 	}
 
-	err := withMigrationLock(m.db, func() error {
-		return migration.RollbackTo(m.db, m.migrations, migrationID)
+	err := withMigrationLock(m.db, func(conn *gorm.DB) error {
+		return migration.RollbackTo(conn, m.migrations, migrationID)
 	})
 	if err != nil {
 		return fmt.Errorf("rollback to %q: %w", migrationID, err)
@@ -84,13 +86,66 @@ func (m *Migrator) RollbackTo(migrationID string) error {
 	return nil
 }
 
-// withMigrationLock берёт Postgres advisory lock на db, выполняет fn и
-// снимает лок по завершении.
-func withMigrationLock(db *gorm.DB, fn func() error) error {
-	if err := db.Exec("SELECT pg_advisory_lock(?)", migrationLockID).Error; err != nil {
-		return fmt.Errorf("acquire migration lock: %w", err)
-	}
-	defer db.Exec("SELECT pg_advisory_unlock(?)", migrationLockID)
+// migrationLockWait — сколько ждать лок миграций, который держит другой
+// процесс (накат на другом инстансе), прежде чем вернуть ошибку;
+// migrationLockPoll — пауза между попытками. Переменные — для тестов.
+var (
+	migrationLockWait = 5 * time.Minute
+	migrationLockPoll = 500 * time.Millisecond
+)
 
-	return fn()
+// withMigrationLock берёт Postgres advisory lock и выполняет fn на одном и
+// том же соединении (advisory lock принадлежит сессии: unlock на другом
+// соединении пула лок не снимает), снимает лок и проверяет, что он был
+// снят. Лок, занятый другим процессом, ждёт до migrationLockWait через
+// pg_try_advisory_lock — без вечного ожидания.
+func withMigrationLock(db *gorm.DB, fn func(conn *gorm.DB) error) error {
+	return db.Connection(func(pinned *gorm.DB) (err error) {
+		// новая сессия на закреплённом соединении: каждый запрос — со своим
+		// Statement (экземпляр из Connection копит состояние между запросами)
+		conn := pinned.Session(&gorm.Session{NewDB: true})
+
+		if err := acquireMigrationLock(conn); err != nil {
+			return err
+		}
+
+		defer func() {
+			var unlocked bool
+
+			unlockErr := conn.Raw("SELECT pg_advisory_unlock(?)", migrationLockID).Scan(&unlocked).Error
+			if unlockErr == nil && !unlocked {
+				unlockErr = errors.New("lock was not held by this session")
+			}
+
+			if unlockErr != nil {
+				err = errors.Join(err, fmt.Errorf("release migration lock: %w", unlockErr))
+			}
+		}()
+
+		return fn(conn)
+	})
+}
+
+// acquireMigrationLock pg_try_advisory_lock с повтором раз в
+// migrationLockPoll, пока не истечёт migrationLockWait.
+func acquireMigrationLock(conn *gorm.DB) error {
+	deadline := time.Now().Add(migrationLockWait)
+
+	for {
+		var locked bool
+
+		if err := conn.Raw("SELECT pg_try_advisory_lock(?)", migrationLockID).Scan(&locked).Error; err != nil {
+			return fmt.Errorf("acquire migration lock: %w", err)
+		}
+
+		if locked {
+			return nil
+		}
+
+		if time.Now().After(deadline) {
+			return fmt.Errorf("acquire migration lock: held by another session for more than %s", migrationLockWait)
+		}
+
+		time.Sleep(migrationLockPoll)
+	}
 }

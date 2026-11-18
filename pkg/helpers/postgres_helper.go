@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 	"sync"
 
@@ -19,7 +20,7 @@ var sslModes = map[string]bool{
 	"disable": true, "allow": true, "prefer": true, "require": true, "verify-ca": true, "verify-full": true,
 }
 
-// unencryptedSslModes Значения sslmode, при которых соединение может быть без TLS; пусто — disable
+// unencryptedSslModes Значения sslmode, при которых соединение может быть без TLS; пусто — prefer
 var unencryptedSslModes = map[string]bool{"": true, "disable": true, "allow": true, "prefer": true}
 
 // InitPostgresDbConfig Инициализация конфига БД c переменок окружения
@@ -69,9 +70,14 @@ func InitPostgresGormConnection(dbConfig *config.PostgresDbConfig) (*gorm.DB, er
 	return dbClient, nil
 }
 
+// defaultConnectTimeout connect_timeout DSN в секундах, если PGCONNECT_TIMEOUT не задан: без него недоступный хост
+// держит подключение до таймаута TCP ОС
+const defaultConnectTimeout = "5"
+
 // postgresDSN DSN в формате keyword/value libpq: значения в одинарных кавычках, `\` и `'` экранированы —
 // пароль с пробелом, кавычкой или обратной косой чертой доходит до сервера как есть. sslMode — POSTGRES_DB_SSLMODE;
-// пусто — по DbConfig.SslMode (true — require, false — disable); неизвестное значение — ошибка
+// пусто — по DbConfig.SslMode (true — require, false — prefer: TLS, если сервер умеет); неизвестное значение —
+// ошибка. connect_timeout=5, если не задан PGCONNECT_TIMEOUT
 func postgresDSN(dbConfig *database.DbConfig, sslMode string) (string, error) {
 	mode := strings.ToLower(strings.TrimSpace(sslMode))
 
@@ -79,12 +85,12 @@ func postgresDSN(dbConfig *database.DbConfig, sslMode string) (string, error) {
 	case mode == "" && dbConfig.SslMode:
 		mode = "require"
 	case mode == "":
-		mode = "disable"
+		mode = "prefer"
 	case !sslModes[mode]:
 		return "", fmt.Errorf("POSTGRES_DB_SSLMODE: unknown value %q (disable, allow, prefer, require, verify-ca, verify-full)", sslMode)
 	}
 
-	parts := make([]string, 0, 6)
+	parts := make([]string, 0, 7)
 
 	for _, kv := range [][2]string{
 		{"host", dbConfig.Host}, {"port", dbConfig.Port}, {"user", dbConfig.User},
@@ -99,6 +105,10 @@ func postgresDSN(dbConfig *database.DbConfig, sslMode string) (string, error) {
 	}
 
 	parts = append(parts, "sslmode="+mode)
+
+	if os.Getenv("PGCONNECT_TIMEOUT") == "" {
+		parts = append(parts, "connect_timeout="+defaultConnectTimeout)
+	}
 
 	return strings.Join(parts, " "), nil
 }
@@ -115,7 +125,7 @@ func checkSslMode(sslMode, appEnv string) {
 	}
 
 	if mode == "" {
-		mode = "disable"
+		mode = "prefer"
 	}
 
 	if _, warned := sslModeWarned.LoadOrStore(mode+"|"+appEnv, true); warned {

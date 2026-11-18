@@ -60,7 +60,9 @@ func (r *PostgresGormRegistry) IsClosing() bool {
 	return r.closing
 }
 
-func (r *PostgresGormRegistry) Get(name string) (*gorm.DB, error) {
+// Get Соединение name: созданное раньше или новое через фабрику (одно создание на имя при параллельных вызовах).
+// Ошибка или паника фабрики — (nil, ошибка); соединение, созданное во время CloseAll, закрывается — (nil, ошибка)
+func (r *PostgresGormRegistry) Get(name string) (result *gorm.DB, resultErr error) {
 	// ---------- fast path (read lock) ----------
 	r.mu.RLock()
 	if r.closing {
@@ -150,6 +152,8 @@ func (r *PostgresGormRegistry) Get(name string) (*gorm.DB, error) {
 	defer func() {
 		if rec := recover(); rec != nil {
 			err = fmt.Errorf("panic in gorm factory for %s: %v", name, rec)
+		} else if err == nil && db == nil {
+			err = fmt.Errorf("gorm factory returned no connection for %s", name)
 		}
 
 		// publish result (or close immediately if closing)
@@ -161,7 +165,8 @@ func (r *PostgresGormRegistry) Get(name string) (*gorm.DB, error) {
 					_ = sqlDB.Close()
 				}
 			}
-			r.errs[name] = fmt.Errorf("postgres registry is closing")
+			err = fmt.Errorf("postgres registry is closing")
+			r.errs[name] = err
 		} else if err != nil {
 			r.errs[name] = err
 		} else {
@@ -172,6 +177,12 @@ func (r *PostgresGormRegistry) Get(name string) (*gorm.DB, error) {
 		close(ch)
 		delete(r.inflight, name)
 		r.mu.Unlock()
+
+		// the caller gets the same result as the waiters: never (nil, nil) after a panic,
+		// never a connection closed by CloseAll
+		if err != nil {
+			result, resultErr = nil, err
+		}
 	}()
 
 	db, err = r.factory(cfg)

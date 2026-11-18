@@ -84,3 +84,16 @@ func TestCheckSslMode_WarnsOnce(t *testing.T) {
 		t.Fatalf("warnings = %d, want 1; log %q", n, buf.String())
 	}
 }
+
+func TestCheckSslMode_EmptyIsPrefer(t *testing.T) {
+	resetSslModeWarned()
+	t.Cleanup(resetSslModeWarned)
+
+	buf := captureLog(t)
+
+	checkSslMode("", "prod")
+
+	if !strings.Contains(buf.String(), `\"prefer\"`) && !strings.Contains(buf.String(), `"prefer"`) {
+		t.Fatalf("log %q, want mode prefer", buf.String())
+	}
+}

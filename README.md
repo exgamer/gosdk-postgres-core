@@ -26,19 +26,25 @@
 Переменные `POSTGRES_DB_*` (`config.PostgresDbConfig`) читаются из окружения процесса и из `.env`;
 окружение главнее `.env`. Неверное число или флаг в окружении - ошибка старта с именем переменной.
 
-TLS - `POSTGRES_DB_SSLMODE`: `disable` (по умолчанию, как раньше), `allow`, `prefer`, `require`, `verify-ca`,
-`verify-full`; другое значение - ошибка подключения. Значения DSN (пароль с пробелом, кавычкой, `\`) экранируются.
+TLS - `POSTGRES_DB_SSLMODE`: `prefer` (по умолчанию: TLS, если сервер умеет, иначе без него), `disable`, `allow`,
+`require`, `verify-ca`, `verify-full`; другое значение - ошибка подключения. Значения DSN (пароль с пробелом,
+кавычкой, `\`) экранируются. Подключение ждёт сервер не дольше 5 с (`connect_timeout=5`; `PGCONNECT_TIMEOUT` в
+окружении - его значение).
+
+Пул: `POSTGRES_DB_MAX_OPEN_CONNECTIONS` (не задан - 25), `POSTGRES_DB_MAX_IDLE_CONNECTIONS` (не задан - 10), см.
+`gosdk-db-core`.
 
 При `disable`, `allow`, `prefer` (и пустом `POSTGRES_DB_SSLMODE`) и `APP_ENV` не `local` (пустой и неизвестный - тоже
 не `local`) один раз пишется WARN (при старте `PostgresKernel` или первом подключении): соединение может быть без
-шифрования. Подключение - как раньше; вне local задать `require`, `verify-ca` или `verify-full`.
+шифрования. Вне local задать `require`, `verify-ca` или `verify-full`.
 
 Пароль не выводится: `fmt` (`%v`, `%+v`, `%#v`) и `json.Marshal` конфига показывают `POSTGRES_DB_PASSWORD` как `***`
 (пустой - пустым).
 
 ## Логирование запросов
 
-Для вывода логов запросов используется ENV POSTGRES_DB_LOG_LEVEL, если не указан логи выключены
+`POSTGRES_DB_LOG_LEVEL` и `POSTGRES_DB_LOGGING` не применяются: лог запросов GORM задаёт `LOG_LEVEL`
+(`gosdk-db-core`). Значения ниже - для совместимости конфигов
 - "info"
 - "errors"
 - "warnings"
